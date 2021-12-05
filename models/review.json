@@ -1,0 +1,20 @@
+{
+  "Title": "Review",
+  "Properties": {
+    "PropertyId": {
+      "type": "string"
+    },
+    "Title": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "string"
+    },
+    "Rating": {
+      "type": "number"
+    },
+    "Verified": {
+      "type": "boolean"
+    }
+  }
+}
