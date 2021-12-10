@@ -1,4 +1,5 @@
 import boto3
+from boto3.dynamodb.conditions import Key
 import uuid
 import json
 
@@ -13,8 +14,8 @@ def get_reviews(event, context):
             Key={"ReviewId": {"S": event["id"]}},
         )
     elif "propertyId" in event:
-        response = REVIEWS_TABLE.get_item(
-            Key={"PropertyId": {"S": event["proeprtyId"]}},
+        response = REVIEWS_TABLE.query(
+            KeyConditionExpression=Key("PropertyId").eq(event["propertyId"]),
         )
     else:
         response = REVIEWS_TABLE.scan()

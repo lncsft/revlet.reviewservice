@@ -21,17 +21,17 @@ class RevletReviewserviceStack(Stack):
             ),
         )
 
+        api = aws_apigateway.RestApi(self, "revlet-reviews-api")
+        reviewsResource = api.root.add_resource("reviews")
+
         repo = aws_ecr.Repository(self, "revlet.reviewservice")
         fn = aws_lambda.DockerImageFunction(
             self,
             "revlet-reviewservice-get",
-            code=aws_lambda.DockerImageCode.from_ecr(repo),
+            code=aws_lambda.DockerImageCode.from_ecr(
+                repository=repo, cmd=["app.get_reviews"], tag="latest"
+            ),
         )
-        api = aws_apigateway.LambdaRestApi(
-            self,
-            "revlet-reviewservice-api",
-            handler=fn,
-            proxy=False,
-        )
-        reviewsResource = api.root.add_resource("reviews")
-        reviewsResource.add_method("GET")
+
+        get_reviews_integration = aws_apigateway.LambdaIntegration(fn)
+        reviewsResource.add_method("GET", get_reviews_integration)
